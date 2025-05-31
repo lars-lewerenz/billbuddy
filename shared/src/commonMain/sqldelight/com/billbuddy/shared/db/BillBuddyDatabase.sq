@@ -1,0 +1,119 @@
+-- User table
+CREATE TABLE IF NOT EXISTS User (
+    id TEXT NOT NULL PRIMARY KEY,
+    email TEXT NOT NULL UNIQUE,
+    displayName TEXT
+    -- photoUrl TEXT -- This was identified as missing for the User data class, but keeping schema as per prompt for now.
+);
+
+-- Group table
+CREATE TABLE IF NOT EXISTS `Group` ( -- Quoted "Group" as it can be a keyword
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    created_by_user_id TEXT NOT NULL,
+    invite_code TEXT UNIQUE,
+    FOREIGN KEY (created_by_user_id) REFERENCES User(id)
+);
+
+-- GroupMember junction table
+CREATE TABLE IF NOT EXISTS GroupMember (
+    id TEXT NOT NULL PRIMARY KEY,
+    group_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (group_id) REFERENCES `Group`(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    UNIQUE (group_id, user_id)
+);
+
+-- Expense table
+CREATE TABLE IF NOT EXISTS Expense (
+    id TEXT NOT NULL PRIMARY KEY,
+    group_id TEXT NOT NULL,
+    description TEXT NOT NULL,
+    amount REAL NOT NULL,
+    paid_by_user_id TEXT NOT NULL,
+    date INTEGER NOT NULL,
+    FOREIGN KEY (group_id) REFERENCES `Group`(id) ON DELETE CASCADE,
+    FOREIGN KEY (paid_by_user_id) REFERENCES User(id)
+);
+
+-- ExpenseParticipant junction table
+CREATE TABLE IF NOT EXISTS ExpenseParticipant (
+    id TEXT NOT NULL PRIMARY KEY,
+    expense_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY (expense_id) REFERENCES Expense(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    UNIQUE (expense_id, user_id)
+);
+
+-- Queries for User table
+insertUser:
+INSERT OR REPLACE INTO User(id, email, displayName) VALUES (?, ?, ?);
+
+selectUserById:
+SELECT * FROM User WHERE id = ?;
+
+-- Queries for Group table
+insertGroup:
+INSERT INTO `Group`(id, name, created_by_user_id, invite_code) VALUES (?, ?, ?, ?);
+
+selectGroupById:
+SELECT * FROM `Group` WHERE id = ?;
+
+selectGroupsByUserId:
+SELECT g.*
+FROM `Group` g
+JOIN GroupMember gm ON g.id = gm.group_id
+WHERE gm.user_id = ?;
+
+-- Queries for GroupMember table
+addMember:
+INSERT OR IGNORE INTO GroupMember(id, group_id, user_id) VALUES (?, ?, ?);
+
+getMembersForGroup:
+SELECT user_id FROM GroupMember WHERE group_id = ?;
+
+removeMember:
+DELETE FROM GroupMember WHERE group_id = ? AND user_id = ?;
+
+-- Queries for Expense table
+insertExpense:
+INSERT INTO Expense(id, group_id, description, amount, paid_by_user_id, date) VALUES (?, ?, ?, ?, ?, ?);
+
+selectExpenseById:
+SELECT * FROM Expense WHERE id = ?;
+
+selectExpensesByGroupId:
+SELECT * FROM Expense WHERE group_id = ? ORDER BY date DESC;
+
+selectExpensesPaidByUser:
+SELECT * FROM Expense WHERE paid_by_user_id = ? ORDER BY date DESC;
+
+selectExpensesPaidByUserInGroup:
+SELECT * FROM Expense WHERE paid_by_user_id = ? AND group_id = ? ORDER BY date DESC;
+
+-- Queries for ExpenseParticipant table
+addParticipant:
+INSERT OR IGNORE INTO ExpenseParticipant(id, expense_id, user_id) VALUES (?, ?, ?);
+
+getParticipantsForExpense:
+SELECT user_id FROM ExpenseParticipant WHERE expense_id = ?;
+
+removeParticipant:
+DELETE FROM ExpenseParticipant WHERE expense_id = ? AND user_id = ?;
+
+-- More complex query: Get expenses a user participated in
+selectExpensesForUserParticipation:
+SELECT e.*
+FROM Expense e
+JOIN ExpenseParticipant ep ON e.id = ep.expense_id
+WHERE ep.user_id = ?
+ORDER BY e.date DESC;
+
+selectExpensesForUserParticipationInGroup:
+SELECT e.*
+FROM Expense e
+JOIN ExpenseParticipant ep ON e.id = ep.expense_id
+WHERE ep.user_id = ? AND e.group_id = ?
+ORDER BY e.date DESC;

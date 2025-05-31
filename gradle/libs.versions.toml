@@ -1,0 +1,111 @@
+[versions]
+# Kotlin & Coroutines
+kotlin = "1.9.23" # Referenced from gradle.properties in the original request, but hardcoded here as direct property access is not typical in TOML. Replaced ${System.getProperty("kotlin.version")}
+agp = "8.2.2" # Referenced from gradle.properties in the original request, hardcoded here.
+coroutines = "1.7.3"
+
+# Ktor
+ktor = "2.3.9"
+
+# Serialization
+kotlinxSerialization = "1.6.3"
+
+# AndroidX
+androidxActivity = "1.8.0"
+androidxAppcompat = "1.6.1"
+androidxCoreKtx = "1.12.0"
+androidxLifecycle = "2.7.0" # For ViewModel, LiveData etc.
+composeBom = "2024.04.00" # Check for latest
+composeCompiler = "1.5.10" # Aligns with Kotlin 1.9.23
+
+# Koin (Dependency Injection)
+koin = "3.5.3" # Or koinCore = "3.5.3", koinAndroid = "3.5.3" etc. if using BOM
+
+# Multiplatform Settings
+multiplatformSettings = "1.1.1"
+
+# Napier (Logging)
+napier = "2.7.1"
+
+# SQLDelight (Database)
+sqlDelight = "2.0.1" # Check for latest
+
+# Test
+junit = "4.13.2"
+androidxTestJunit = "1.1.5"
+androidxEspresso = "3.5.1"
+kotlinTest = "1.9.23" # Use same as Kotlin. Replaced ${System.getProperty("kotlin.version")}
+uuid = "0.8.2"
+kotlinxDatetime = "0.5.0"
+
+
+[libraries]
+# Kotlin
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+# Ktor
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" } # JVM engine
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" } # Native engine for iOS
+ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+
+# AndroidX & Compose
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtx" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+# Koin
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
+# Multiplatform Settings
+multiplatformSettings-noArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+multiplatformSettings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "multiplatformSettings" }
+
+# Napier
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
+
+# SQLDelight
+sqldelight-gradle-plugin = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqlDelight" }
+sqldelight-driver-sqlite = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqlDelight" }
+sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqlDelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
+
+
+# Testing
+junit = { module = "junit:junit", version.ref = "junit" }
+androidx-test-junit = { module = "androidx.test.ext:junit", version.ref = "androidxTestJunit" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidxEspresso" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinTest" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinTest" }
+uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+
+
+[plugins]
+# Root build.gradle.kts plugins are defined there with .apply(false)
+# For subproject build.gradle.kts files:
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-native-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
