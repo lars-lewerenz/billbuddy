@@ -37,6 +37,7 @@ androidxEspresso = "3.5.1"
 kotlinTest = "1.9.23" # Use same as Kotlin. Replaced ${System.getProperty("kotlin.version")}
 uuid = "0.8.2"
 kotlinxDatetime = "0.5.0"
+playServicesAuth = "21.0.0"
 
 
 [libraries]
@@ -95,6 +96,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinTest" }
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+google-play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 
 
 [plugins]
